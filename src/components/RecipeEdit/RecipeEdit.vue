@@ -6,10 +6,9 @@
         <button
           class="btn recipe-edit__remove-button"
           @click="handleEditClose"
-        >
-          &times;
-        </button>
+        >&times;</button>
       </div>
+
       <div class="recipe-edit__details-grid">
         <label for="name" class="recipe-edit__label">Name:</label>
         <input
@@ -17,8 +16,7 @@
           name="name"
           id="name"
           class="recipe-edit__input"
-          :value="recipe.name"
-          @input="(e) => {handleEditInput({name: e.target.value})}"
+          v-model="localName"
         />
 
         <label for="cookTime" class="recipe-edit__label">Cook Time:</label>
@@ -27,8 +25,7 @@
           name="cookTime"
           id="cookTime"
           class="recipe-edit__input"
-          :value="recipe.cookTime"
-          @input="(e) => {handleEditInput({cookTime: e.target.value})}"
+          v-model="localCookTime"
         />
 
         <label for="servings" class="recipe-edit__label">Servings:</label>
@@ -38,8 +35,7 @@
           name="servings"
           id="servings"
           class="recipe-edit__input"
-          :value="recipe.servings"
-          @input="(e) => {handleEditInput({servings: e.target.value})}"
+          v-model="localServings"
         />
 
         <label for="instructions" class="recipe-edit__label">Instructions:</label>
@@ -47,8 +43,7 @@
           name="instructions"
           id="instructions"
           class="recipe-edit__input"
-          :value="recipe.instructions"
-          @input="(e) => {handleEditInput({instructions: e.target.value})}"
+          v-model="localInstructions"
         />
       </div>
       <br />
@@ -61,20 +56,14 @@
               v-for="ingredient in recipe.ingredients"
               :key="ingredient.id"
               v-bind="ingredient"
+              :handleChange="handleIngredientChange"
+              :handleRemove="removeIngredient"
             />
-      <!--      {recipe.ingredients.map(ingredient => (-->
-      <!--      <RecipeIngredientsEdit-->
-      <!--          key={ingredient.id}-->
-      <!--          handleIngredientChange={handleIngredientChange}-->
-      <!--          handleIngredientDelete={handleIngredientDelete}-->
-      <!--          ingredient={ingredient}-->
-      <!--      />-->
-      <!--      ))}-->
           </div>
           <div class="recipe-edit__add-ingredient-btn-container">
             <button
               class="btn btn--primary"
-              @click="() => {}"
+              @click="addNewIngredient"
             >Add Ingredient</button>
           </div>
     </div>
@@ -83,6 +72,7 @@
 
 <script>
 import RecipeIngredientsEdit from "../RecipeIngredientsEdit";
+import {v4 as uuidv4} from 'uuid'
 
 export default {
   name: "RecipeEdit",
@@ -92,7 +82,43 @@ export default {
   props: {
     handleEditClose: Function,
     handleEditInput: Function,
+    handleEditIngredient: Function,
     recipe: Object,
+  },
+  data(){
+    return {
+      localName: this.recipe.name,
+      localCookTime: this.recipe.cookTime,
+      localServings: this.recipe.servings,
+      localInstructions: this.recipe.instructions
+    }
+  },
+  watch: {
+    localName(value){
+      this.handleEditInput({name: value})
+    },
+    localCookTime(value){
+      this.handleEditInput({cookTime: value})
+    },
+    localServings(value){
+      this.handleEditInput({servings: value})
+    },
+    localInstructions(value){
+      this.handleEditInput({instructions: value})
+    },
+  },
+  methods: {
+    handleIngredientChange(id, value){
+      const index = this.recipe.ingredients.findIndex(ingredient => ingredient.id === id)
+      this.handleEditIngredient(index, value)
+    },
+    addNewIngredient(){
+      const newIngredient = {id: uuidv4(), name: '', amount: ''}
+      this.$set( this.recipe.ingredients, this.recipe.ingredients.length, newIngredient)
+    },
+    removeIngredient(id){
+      this.recipe.ingredients = this.recipe.ingredients.filter(i => i.id !== id)
+    }
   }
 }
 </script>

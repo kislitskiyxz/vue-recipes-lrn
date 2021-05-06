@@ -53,7 +53,7 @@ export default {
     id: [Number, String],
     name: String,
     cookTime: String,
-    servings: Number,
+    servings: [String, Number],
     instructions: String,
     ingredients: Array,
     onDelete: Function,

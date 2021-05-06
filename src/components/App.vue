@@ -11,9 +11,10 @@
       v-if="currentRecipeId !== null"
       :handleEditClose="handleEditClose"
       :handleEditInput="handleEditInput"
+      :handleEditIngredient="handleIngredientChange"
       :recipe="getCurrentRecipe()"
     />
-    <div>{{currentRecipeId}}</div>
+    <div>{{ currentRecipeId }}</div>
   </div>
 </template>
 
@@ -90,7 +91,7 @@ export default {
   }),
   methods: {
     handleRecipeDelete(id) {
-      this.currentRecipeId = null
+      if(this.currentRecipeId === id) this.currentRecipeId = null
       const filteredList = this.recipes.filter(recipe => recipe.id !== id)
       this.recipes = filteredList
       writeRecipeListToLS(filteredList)
@@ -123,6 +124,12 @@ export default {
     handleEditInput(change) {
       const index = this.recipes.findIndex(recipe => recipe.id === this.currentRecipeId)
       this.$set(this.recipes, index, {...this.recipes[index], ...change})
+    },
+    handleIngredientChange(index, newIngredient) {
+      const currentIndex = this.recipes.findIndex(recipe => recipe.id === this.currentRecipeId) // find current recipe index
+      let currentIngredients = this.recipes[currentIndex].ingredients // find recipe's ingredients
+      this.$set(currentIngredients, index, newIngredient)
+      this.$set(this.recipes, currentIndex, {...this.recipes[currentIndex], ingredients: currentIngredients}) // overwrite
     }
   }
 }
