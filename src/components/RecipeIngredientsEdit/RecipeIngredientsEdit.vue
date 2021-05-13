@@ -2,12 +2,12 @@
   <div>
     <input
       type="text"
-      class="recipe-editinput"
+      class="recipe-edit__input"
       v-model="localName"
     />
     <input
       type="text"
-      class="recipe-editinput"
+      class="recipe-edit__input"
       v-model="localAmount"
     />
     <button
@@ -49,16 +49,6 @@ export default {
       })
     }
   }
-  // data(){
-  //   return {
-  //     localName: this.name,
-  //     localAmount: this.amount
-  //   }
-  // },
-  // watch: {
-  //   localName(value){this.handleChange(this.id, value)},
-  //   localAmount(value){this.handleChange(this.id, value)},
-  // }
 }
 </script>
 

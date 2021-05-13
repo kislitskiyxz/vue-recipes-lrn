@@ -18,9 +18,6 @@ export default {
   },
   props: {
     list: Array,
-    // id: String,
-    // name: String,
-    // amount: Number,
   }
 }
 </script>
